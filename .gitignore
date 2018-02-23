@@ -1,0 +1,7 @@
+plugin.xml
+test.projecttojs.iml
+.project
+.classpath
+/.idea/
+/classes/
+/.settings/
