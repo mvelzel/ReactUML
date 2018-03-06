@@ -1,5 +1,4 @@
-plugin.xml
-test.projecttojs.iml
+*.iml
 .project
 .classpath
 /.idea/
