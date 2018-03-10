@@ -5,6 +5,7 @@ import com.vp.plugin.action.VPActionController;
 import com.vp.plugin.model.*;
 import test.projecttojs.actions.generators.Generator;
 import test.projecttojs.actions.generators.MultiGenerator;
+import test.projecttojs.actions.generators.classes.ClassGenerator;
 import test.projecttojs.actions.generators.controller.ControllerGenerator;
 import test.projecttojs.actions.generators.domainentity.DomainEntityAPIGenerator;
 import test.projecttojs.actions.generators.domainentity.DomainEntityGenerator;
@@ -117,6 +118,11 @@ public class ProjectToJsActionController implements VPActionController {
                     generators.add(controllerGenerator);
                     generators.add(formGenerator);
                     generators.add(storeGenerator);
+                } else if (Helpers.stringExistsInIterator(modelClass.stereotypeIterator(), "Class")) {
+                    ClassDefinition modelDefinition = new ClassDefinition(modelClass.getId(), false);
+
+                    ClassGenerator classGenerator = new ClassGenerator(modelDefinition);
+                    generatorThreads.addThread(classGenerator);
                 }
             }
         }

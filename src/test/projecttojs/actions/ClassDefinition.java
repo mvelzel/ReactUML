@@ -40,11 +40,11 @@ public class ClassDefinition {
 
         this.name = namespace + "_" + modelClass.getName();
         this.parentProject = modelClass.getProject();
-        this.operations = new ArrayList<IOperation>();
-        this.attributes = new ArrayList<IAttribute>();
-        this.associations = new ArrayList<IAssociation>();
-        this.stereotypes = new ArrayList<String>();
-        this.taggedValues = new ArrayList<ITaggedValue>();
+        this.operations = new ArrayList<>();
+        this.attributes = new ArrayList<>();
+        this.associations = new ArrayList<>();
+        this.stereotypes = new ArrayList<>();
+        this.taggedValues = new ArrayList<>();
 
         for (Iterator<IOperation> iter = modelClass.operationIterator(); iter.hasNext(); ) {
             IOperation operation = iter.next();
