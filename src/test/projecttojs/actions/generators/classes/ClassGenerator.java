@@ -25,7 +25,7 @@ public class ClassGenerator extends DefaultSingleGenerator implements Generator 
         operationsGenerator.generateFullText();
         String operationsCode = operationsGenerator.getFullText();
 
-        String generalization = this.getDefinition().getGeneralizationClass() != null ? "extends " + this.getDefinition().getGeneralizationClass().getName() : "";
+        String generalization = this.getDefinition().getGeneralizationClass() != null ? "extends " + this.getDefinition().getGeneralizationClass().getName() + " " : "";
 
         this.appendFullText("// " + this.getDefinition().getName() + " Class\n" +
                 "// \n" +
@@ -35,10 +35,8 @@ public class ClassGenerator extends DefaultSingleGenerator implements Generator 
                 "//          Change the code only in the Visual Paradigm Project.\n\n" +
                 importsCode +
                 "\n" +
-                "class " + this.getDefinition().getName() + " " + generalization + " {\n" +
-                "    constructor() {\n" +
-                constructorCode +
-                "    };\n" +
+                "class " + this.getDefinition().getName() + " " + generalization + "{\n" +
+                constructorCode + "\n" +
                 operationsCode +
                 "}\n\n" +
                 "export default " + this.getDefinition().getName() + ";");

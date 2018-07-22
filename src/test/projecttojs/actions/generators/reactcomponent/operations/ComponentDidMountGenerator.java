@@ -2,6 +2,7 @@ package test.projecttojs.actions.generators.reactcomponent.operations;
 
 import com.vp.plugin.model.IAttribute;
 import com.vp.plugin.model.IOperation;
+import com.vp.plugin.model.ITaggedValue;
 import test.projecttojs.actions.ClassDefinition;
 import test.projecttojs.actions.Helpers;
 import test.projecttojs.actions.generators.Generator;
@@ -32,14 +33,12 @@ public class ComponentDidMountGenerator extends DefaultSingleGenerator implement
                     Helpers.error("The type of " + connection.getTypeAsString() + " in attribute " + connection.getName() + " of " + this.getDefinition().getName() + " is not a model!");
                     continue;
                 }
+                if (connection.getTaggedValues() == null || connection.getTaggedValues().toTaggedValueArray().length == 0) {
+                    continue;
+                }
                 ClassDefinition type = new ClassDefinition(connection.getTypeAsModel().getId(), false);
-                this.appendFullText("        DomainAPI." + type.getName() + "Connect(this, '" + connection.getName() + "');\n");
-                if(Helpers.stringExistsInIterator(connection.stereotypeIterator(), "connectRoute")){
-                    this.appendFullText("        DomainAPI." + type.getName() + "LoadItem(this.props.params.id);\n");
-                }
-                if(Helpers.stringExistsInIterator(connection.stereotypeIterator(), "load")){
-                    this.appendFullText("        if(this.props." + connection.getName() + ".id && this.props." + connection.getName() + ".loadStatus === \"proxy\") { DomainAPI." + type.getName() + "LoadItem(this.props." + connection.getName() + ".id); }\n");
-                }
+                ITaggedValue idTag = Helpers.getFromElementList(Arrays.asList(connection.getTaggedValues().toTaggedValueArray()), ITaggedValue::getName, n -> n.equals("id"));
+                this.appendFullText("        ActionList." + type.getName() + "." + type.getName() + "_Load(" + idTag.getValueAsString() + ");\n");
             }
             this.appendFullText(errorActionCode);
             errorImplement = true;

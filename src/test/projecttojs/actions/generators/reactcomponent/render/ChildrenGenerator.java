@@ -32,7 +32,7 @@ public class ChildrenGenerator extends DefaultSingleGenerator implements Generat
                         routeFound = true;
                         this.appendFullText("                    <Switch>\n" +
                                 "                        { React.Children.map(self.props.children, function(child){\n" +
-                                "                            return React.cloneElement(child, {render: function(props){ return child.props.render(self.state); }});\n" +
+                                "                            return React.cloneElement(child, {render: function(props){ return child.props.render(self.props); }});\n" +
                                 "                        })}\n" +
                                 "                    </Switch>\n");
                     }

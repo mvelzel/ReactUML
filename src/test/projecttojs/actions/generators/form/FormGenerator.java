@@ -3,26 +3,28 @@ package test.projecttojs.actions.generators.form;
 import test.projecttojs.actions.ClassDefinition;
 import test.projecttojs.actions.generators.DefaultSingleGenerator;
 import test.projecttojs.actions.generators.Generator;
-import test.projecttojs.actions.generators.controller.operations.UpdateOperationGenerator;
 import test.projecttojs.actions.generators.form.classes.CreateFormGenerator;
 import test.projecttojs.actions.generators.form.classes.SelectFormGenerator;
 import test.projecttojs.actions.generators.form.classes.UpdateFormGenerator;
 
 public class FormGenerator extends DefaultSingleGenerator implements Generator {
-    public FormGenerator(ClassDefinition definition) {
+    public FormGenerator(ClassDefinition definition){
         super(definition);
     }
 
     @Override
     public void generateFullText() {
+        ImportsGenerator importsGenerator = new ImportsGenerator(this.getDefinition());
         CreateFormGenerator createFormGenerator = new CreateFormGenerator(this.getDefinition());
         SelectFormGenerator selectFormGenerator = new SelectFormGenerator(this.getDefinition());
         UpdateFormGenerator updateFormGenerator = new UpdateFormGenerator(this.getDefinition());
 
+        importsGenerator.generateFullText();
         createFormGenerator.generateFullText();
         selectFormGenerator.generateFullText();
         updateFormGenerator.generateFullText();
 
+        String importsCode = importsGenerator.getFullText();
         String createFormCode = createFormGenerator.getFullText();
         String updateFormCode = updateFormGenerator.getFullText();
         String selectFormCode = selectFormGenerator.getFullText();
@@ -33,12 +35,8 @@ public class FormGenerator extends DefaultSingleGenerator implements Generator {
                 "//\n" +
                 "// WARNING: Do not change this code; it will be overwritten by the next generation run!\n" +
                 "//          Change the code only in the Visual Paradigm Project.\n\n" +
-                "var DomainAPI = require('../domain-entity/DomainAPI');\n" +
-                "import * as Attribute from '../../../js/3-domain/meta/Attribute';\n" +
-                "import { Form } from '../../../js/1-presentation/services/meta/Form';\n" +
-                "import * as FormField from '../../../js/1-presentation/services/meta/FormField';\n" +
-                "import { " + this.getDefinition().getName() + " } from '../domain-entity/" + this.getDefinition().getName() + "';\n" +
-                "\n" +
+                importsCode +
+                "var Entity = new " + this.getDefinition().getName() + "();\n\n" +
                 createFormCode + "\n" +
                 updateFormCode + "\n" +
                 selectFormCode + "\n" +
@@ -47,10 +45,5 @@ public class FormGenerator extends DefaultSingleGenerator implements Generator {
                 "    UpdateForm as Update,\n" +
                 "    SelectForm as Select\n" +
                 "}\n");
-    }
-
-    @Override
-    public String getFolder() {
-        return "form";
     }
 }

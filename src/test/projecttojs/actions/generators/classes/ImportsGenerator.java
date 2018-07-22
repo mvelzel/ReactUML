@@ -11,6 +11,8 @@ public class ImportsGenerator extends DefaultSingleGenerator implements Generato
 
     @Override
     public void generateFullText() {
-
+        if (this.getDefinition().getStereotypes().contains("FormField")) {
+            this.appendFullText("import FormField from '../../../js/1-presentation/services/meta/FormField';\n");
+        }
     }
 }

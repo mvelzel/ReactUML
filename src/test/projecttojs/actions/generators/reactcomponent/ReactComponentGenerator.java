@@ -1,5 +1,6 @@
 package test.projecttojs.actions.generators.reactcomponent;
 
+import com.vp.plugin.model.IAttribute;
 import test.projecttojs.actions.ClassDefinition;
 import test.projecttojs.actions.generators.Generator;
 import test.projecttojs.actions.Helpers;
@@ -7,6 +8,9 @@ import test.projecttojs.actions.generators.DefaultSingleGenerator;
 import test.projecttojs.actions.generators.reactcomponent.constructor.ConstructorGenerator;
 import test.projecttojs.actions.generators.reactcomponent.operations.OperationsGenerator;
 import test.projecttojs.actions.generators.reactcomponent.render.RenderGenerator;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class ReactComponentGenerator extends DefaultSingleGenerator implements Generator {
     public ReactComponentGenerator(ClassDefinition definition){
@@ -31,9 +35,39 @@ public class ReactComponentGenerator extends DefaultSingleGenerator implements G
         operations.generateFullText();
         String operationsCode = operations.getFullText();
 
-        String exportsCode = "export default " + this.getDefinition().getName() + ";";
-        if (Helpers.stringExistsInIterator(this.getDefinition().getStereotypes().iterator(), "history") || Helpers.stringExistsInIterator(this.getDefinition().getStereotypes().iterator(), "match"))
-            exportsCode = "export default withRouter(" + this.getDefinition().getName() + ");";
+        String exportsCodeStart = "export default ";
+        String exportsCodeMiddle = this.getDefinition().getName();
+        String exportsCodeEnd = ";\n";
+        if (Helpers.stringExistsInIterator(this.getDefinition().getStereotypes().iterator(), "history") || Helpers.stringExistsInIterator(this.getDefinition().getStereotypes().iterator(), "match")) {
+            exportsCodeStart +=  "withRouter(";
+            exportsCodeEnd = ");\n";
+        }
+
+        String mapStateToPropsCode = "";
+
+        List<IAttribute> connections = Helpers.filterElementList(this.getDefinition().getAttributes(),
+                c -> Arrays.asList(c.toStereotypeArray()),
+                ss -> ss.contains("connect") || ss.contains("connectRoute") || ss.contains("load"));
+
+        if (connections.size() > 0) {
+            exportsCodeMiddle = "connect(mapStateToProps)(" + this.getDefinition().getName() + ")";
+            mapStateToPropsCode += "function mapStateToProps(state) {\n" +
+                    "    return {\n";
+            boolean firstIter = true;
+            for (IAttribute connection : connections) {
+                ClassDefinition type = new ClassDefinition(connection.getTypeAsModel().getId(), false);
+
+                mapStateToPropsCode += "        " + connection.getName() + ": state." + type.getName();
+                if (!firstIter) {
+                    mapStateToPropsCode += ",";
+                }
+                mapStateToPropsCode += "\n";
+                firstIter = false;
+            }
+            mapStateToPropsCode += "    }\n" +
+                    "}\n\n";
+        }
+        String exportsCode = exportsCodeStart + exportsCodeMiddle + exportsCodeEnd;
 
         this.appendFullText("// " + this.getDefinition().getName() + " React Component\n" +
                 "//\n" +
@@ -50,6 +84,7 @@ public class ReactComponentGenerator extends DefaultSingleGenerator implements G
                 "    };\n" +
                 operationsCode +
                 "};\n\n" +
+                mapStateToPropsCode +
                 exportsCode);
     }
 

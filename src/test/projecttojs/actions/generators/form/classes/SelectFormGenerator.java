@@ -18,12 +18,8 @@ public class SelectFormGenerator extends DefaultSingleGenerator implements Gener
 
         this.appendFullText("class SelectForm extends Form {\n" +
 	        "    constructor(){\n" +
-	    	"        super();\n" +
-	        "        this.name = '" + this.getDefinition().getName() + "SelectForm';\n" +
-		    "        this.title = '" + label + " selecteren';\n" +
-		    "        this.fields = {\n" +
-	        "            id: new class extends FormField.Select { constructor(){ super(); this.name = 'id'; this.sequence = '01'; this.attribute = Attribute.SelectionAttribute({ name: 'id', options: spec.options || [], label: '', defaultFieldType: FormField.Select, help: 'Maak een selectie...' }); this.width = '12'; this.offset = '0'; this.getFocus = true;} }()\n" +
-	        "        };\n" +
+	    	"        super('" + this.getDefinition().getName() + "SelectForm', 'Select " + label + "', {\n" +
+	        "        });\n" +
 	        "        delete this.buttons.remove;\n" +
 	        "    }\n" +
 	        "}\n");

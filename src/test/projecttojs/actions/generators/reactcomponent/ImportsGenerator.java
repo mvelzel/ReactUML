@@ -1,12 +1,14 @@
 package test.projecttojs.actions.generators.reactcomponent;
 
 import com.vp.plugin.model.IAssociation;
+import com.vp.plugin.model.IAttribute;
 import test.projecttojs.actions.ClassDefinition;
 import test.projecttojs.actions.generators.Generator;
 import test.projecttojs.actions.Helpers;
 import test.projecttojs.actions.generators.DefaultSingleGenerator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ImportsGenerator extends DefaultSingleGenerator implements Generator {
@@ -16,13 +18,10 @@ public class ImportsGenerator extends DefaultSingleGenerator implements Generato
 
     @Override
     public void generateFullText() {
-        if (Helpers.stringExistsInIterator(this.getDefinition().getStereotypes().iterator(), "formstore"))
-            this.appendFullText("var FormActions = require('../../../js/1-presentation/services/actions/FormActions');\n");
         if (Helpers.stringExistsInIterator(this.getDefinition().getStereotypes().iterator(), "errors"))
             this.appendFullText("var ErrorActions = require('../../../js/3-domain/actions/ErrorActions');\n");
 
-        this.appendFullText("var DomainAPI = require('../domain-entity/DomainAPI');\n" +
-                "import React from 'react';\n" +
+        this.appendFullText("import React from 'react';\n" +
                 "import * as _ from 'lodash';\n");
 
         if (this.getDefinition().getRealizationClass() != null) {
@@ -37,9 +36,15 @@ public class ImportsGenerator extends DefaultSingleGenerator implements Generato
             this.appendFullText("import * as firebase from 'firebase';\n" +
                     "import { FirebaseManager } from '../../../js/4-infrastructure/databaseManagers/FirebaseManager';\n");
 
-        if (Helpers.stringExistsInIterator(this.getDefinition().getStereotypes().iterator(), "form"))
-            this.appendFullText("import { Form } from '../../../js/1-presentation/services/meta/Form';\n" +
-                    "import * as FormField from '../../../js/1-presentation/services/meta/FormField';\n");
+
+        List<IAttribute> connections = Helpers.filterElementList(this.getDefinition().getAttributes(),
+                c -> Arrays.asList(c.toStereotypeArray()),
+                ss -> ss.contains("connect") || ss.contains("connectRoute") || ss.contains("load"));
+
+        if (connections.size() > 0) {
+            this.appendFullText("import { connect } from 'react-redux';\n");
+        }
+        this.appendFullText("import * as ActionList from '../action';\n");
 
         boolean routeFound = false;
         List<String> iterated = new ArrayList<>();

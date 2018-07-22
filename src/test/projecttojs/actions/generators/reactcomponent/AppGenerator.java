@@ -30,10 +30,12 @@ public class AppGenerator extends DefaultSingleGenerator implements Generator {
         }
 
         String importsCode = "";
-        importsCode += "var initApp = require('./initApp');\n" +
-                "import React from 'react';\n" +
+        importsCode += "import React from 'react';\n" +
                 "import ReactDOM from 'react-dom';\n" +
                 "import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';\n" +
+                "import { Provider } from 'react-redux';\n" +
+                "import store from './store';\n" +
+                "import initActions from './action/init';\n" +
                 "import " + this.getDefinition().getName() + " from './react-component/" + this.getDefinition().getName() + "';\n";
         for (IAssociation association : outBoundRoutes) {
             IAssociationEnd thatEnd = Helpers.getAssociationEnd(association, this.getDefinition(), true);
@@ -73,16 +75,17 @@ public class AppGenerator extends DefaultSingleGenerator implements Generator {
                 "// WARNING: Do not change this code; it will be overwritten by the next generation run!\n" +
                 "//          Change the code only in Visual Paradigm.\n\n" +
                 importsCode + "\n" +
-                "$(window).load(function() {\n" +
-                "    ReactDOM.render(\n" +
+                "initActions()\n\n" +
+                "ReactDOM.render(\n" +
+                "    <Provider store={store}>\n" +
                 "        <Router>\n" +
                 "            <" + this.getDefinition().getName() + ">\n" +
                 routeCode +
                 "            </" + this.getDefinition().getName() + ">\n" +
-                "        </Router>,\n" +
-                "        document.getElementById('app-container')\n" +
-                "    );\n" +
-                "});\n");
+                "        </Router>\n" +
+                "    </Provider>,\n" +
+                "    document.getElementById('app-container')\n" +
+                ");\n");
     }
 
     public String getFolder() {
@@ -90,6 +93,6 @@ public class AppGenerator extends DefaultSingleGenerator implements Generator {
     }
 
     public String getName() {
-        return "App";
+        return "index";
     }
 }

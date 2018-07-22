@@ -24,7 +24,6 @@ public class ConstructorGenerator extends DefaultSingleGenerator implements Gene
         this.appendFullText("    constructor() {\n" +
                 "        super();\n" +
                 "        this.type = '" + this.getDefinition().getName() + "';\n" +
-                "        this.controller = require('../controller/" + this.getDefinition().getName() + "');\n" +
                 "        this.isPersistent = " + Boolean.toString(Helpers.stringExistsInIterator(this.getDefinition().getStereotypes().iterator(), "persistent")) + ";\n" +
                 "        this.hasUrl = " + Boolean.toString(Helpers.stringExistsInIterator(this.getDefinition().getStereotypes().iterator(), "hasUrl")) + ";\n" +
                 "        this.attributes = _.extend(this.attributes, {\n" +

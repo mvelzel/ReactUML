@@ -5,22 +5,20 @@ import com.vp.plugin.action.VPActionController;
 import com.vp.plugin.model.*;
 import test.projecttojs.actions.generators.Generator;
 import test.projecttojs.actions.generators.MultiGenerator;
+import test.projecttojs.actions.generators.action.ActionInitEndGenerator;
+import test.projecttojs.actions.generators.action.ActionInitGenerator;
+import test.projecttojs.actions.generators.action.ActionListEndGenerator;
+import test.projecttojs.actions.generators.action.ActionListGenerator;
 import test.projecttojs.actions.generators.classes.ClassGenerator;
-import test.projecttojs.actions.generators.controller.ControllerGenerator;
-import test.projecttojs.actions.generators.domainentity.DomainEntityAPIGenerator;
 import test.projecttojs.actions.generators.domainentity.DomainEntityGenerator;
 import test.projecttojs.actions.generators.domainentity.DomainEntityListEndGenerator;
 import test.projecttojs.actions.generators.domainentity.DomainEntityListGenerator;
-import test.projecttojs.actions.generators.form.FormGenerator;
-import test.projecttojs.actions.generators.form.FormListEndGenerator;
-import test.projecttojs.actions.generators.form.FormListGenerator;
 import test.projecttojs.actions.generators.reactcomponent.AppGenerator;
 import test.projecttojs.actions.generators.reactcomponent.ReactComponentGenerator;
-import test.projecttojs.actions.generators.store.InitAppGenerator;
-import test.projecttojs.actions.generators.store.StoreGenerator;
+import test.projecttojs.actions.generators.reducer.CombineReducerEndGenerator;
+import test.projecttojs.actions.generators.reducer.CombineReducerGenerator;
+import test.projecttojs.actions.generators.reducer.ReducerGenerator;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -39,15 +37,17 @@ public class ProjectToJsActionController implements VPActionController {
         IProject project = ProjectData.getMainProject();
         Iterator<IModelElement> modelIterator = project.allLevelModelElementIterator();
 
-        DomainEntityAPIGenerator domainAPI = new DomainEntityAPIGenerator();
-
         DomainEntityListGenerator entityList = new DomainEntityListGenerator();
         DomainEntityListEndGenerator entityListEnd = new DomainEntityListEndGenerator();
 
-        FormListGenerator formList = new FormListGenerator();
-        FormListEndGenerator formListEnd = new FormListEndGenerator();
+        ActionListGenerator actionList = new ActionListGenerator();
+        ActionListEndGenerator actionListEnd = new ActionListEndGenerator();
 
-        InitAppGenerator initApp = new InitAppGenerator();
+        ActionInitGenerator actionInit = new ActionInitGenerator();
+        ActionInitEndGenerator actionInitEnd = new ActionInitEndGenerator();
+
+        CombineReducerGenerator combineReducer = new CombineReducerGenerator();
+        CombineReducerEndGenerator combineReducerEnd = new CombineReducerEndGenerator();
 
         ThreadManager generatorThreads = new ThreadManager(MAX_THREADS);
 
@@ -85,54 +85,53 @@ public class ProjectToJsActionController implements VPActionController {
                     generators.add(generator);
                 } else if (Helpers.stringExistsInIterator(modelClass.stereotypeIterator(), "DomainEntity")) {
                     ClassDefinition modelDefinition = new ClassDefinition(modelClass.getId(), false);
-                    ClassDefinition modelDefinitionGen = new ClassDefinition(modelClass.getId(), true);
+                    //ClassDefinition modelDefinitionGen = new ClassDefinition(modelClass.getId(), true);
                     DomainEntityGenerator domainGenerator = new DomainEntityGenerator(modelDefinition);
                     generatorThreads.addThread(domainGenerator);
 
-                    ControllerGenerator controllerGenerator = new ControllerGenerator(modelDefinitionGen);
-                    generatorThreads.addThread(controllerGenerator);
-
-                    FormGenerator formGenerator = new FormGenerator(modelDefinitionGen);
-                    generatorThreads.addThread(formGenerator);
-
-                    StoreGenerator storeGenerator = new StoreGenerator(modelDefinitionGen);
-                    generatorThreads.addThread(storeGenerator);
-
-                    domainAPI.setDefinition(modelDefinitionGen);
-                    domainAPI.generateFullText();
+                    ReducerGenerator reducerGenerator = new ReducerGenerator(modelDefinition);
+                    generatorThreads.addThread(reducerGenerator);
 
                     entityList.setDefinition(modelDefinition);
                     entityList.generateFullText();
                     entityListEnd.setDefinition(modelDefinition);
                     entityListEnd.generateFullText();
 
-                    formList.setDefinition(modelDefinition);
-                    formList.generateFullText();
-                    formListEnd.setDefinition(modelDefinition);
-                    formListEnd.generateFullText();
+                    combineReducer.setDefinition(modelDefinition);
+                    combineReducer.generateFullText();
+                    combineReducerEnd.setDefinition(modelDefinition);
+                    combineReducerEnd.generateFullText();
 
-                    initApp.setDefinition(modelDefinition);
-                    initApp.generateFullText();
+                    actionList.setDefinition(modelDefinition);
+                    actionList.generateFullText();
+                    actionListEnd.setDefinition(modelDefinition);
+                    actionListEnd.generateFullText();
+
+                    actionInit.setDefinition(modelDefinition);
+                    actionInit.generateFullText();
+                    actionInitEnd.setDefinition(modelDefinition);
+                    actionInitEnd.generateFullText();
 
                     generators.add(domainGenerator);
-                    generators.add(controllerGenerator);
-                    generators.add(formGenerator);
-                    generators.add(storeGenerator);
+                    generators.add(reducerGenerator);
                 } else if (Helpers.stringExistsInIterator(modelClass.stereotypeIterator(), "Class")) {
                     ClassDefinition modelDefinition = new ClassDefinition(modelClass.getId(), false);
 
                     ClassGenerator classGenerator = new ClassGenerator(modelDefinition);
                     generatorThreads.addThread(classGenerator);
+                    generators.add(classGenerator);
                 }
             }
         }
 
         entityList.appendFullText(entityListEnd.getFullText());
-        formList.appendFullText(formListEnd.getFullText());
+        combineReducer.appendFullText(combineReducerEnd.getFullText().substring(0, combineReducerEnd.getFullText().length() - 2) + "\n");
+        actionList.appendFullText(actionListEnd.getFullText().substring(0, actionListEnd.getFullText().length() - 2) + "\n");
+        actionInit.appendFullText(actionInitEnd.getFullText());
+        generators.add(actionInit);
+        generators.add(actionList);
         generators.add(entityList);
-        generators.add(formList);
-        generators.add(domainAPI);
-        generators.add(initApp);
+        generators.add(combineReducer);
 
         generatorThreads.join();
 

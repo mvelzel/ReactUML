@@ -22,12 +22,9 @@ public class UpdateFormGenerator extends DefaultSingleGenerator implements Gener
 
         this.appendFullText("class UpdateForm extends Form {\n" +
                 "    constructor(){\n" +
-                "        super();\n" +
-                "        this.name = '" + this.getDefinition().getName() + "CreateForm';\n" +
-                "        this.title = '" + label + " wijzigen';\n" +
-                "        this.fields = {\n" +
+                "        super('" + this.getDefinition().getName() + "CreateForm', 'Update " + label + "', {\n" +
                 fieldsCode + "\n" +
-                "        };\n" +
+                "        });\n" +
                 "    }\n" +
                 "}\n");
     }

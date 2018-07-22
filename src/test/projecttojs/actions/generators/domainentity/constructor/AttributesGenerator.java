@@ -32,12 +32,14 @@ public class AttributesGenerator extends DefaultSingleGenerator implements Gener
             ITaggedValue optionsTag = attribute.getTaggedValues() != null ? Helpers.getFromElementList(Arrays.asList(attribute.getTaggedValues().toTaggedValueArray()), ITaggedValue::getName, s -> s.equals("options")) : null;
             String options = optionsTag != null ? optionsTag.getValueAsString() : "null";
 
+            ClassDefinition attributeClass = new ClassDefinition(attribute.getTypeAsModel().getId(), false);
+
             String chartCode = Arrays.stream(attribute.toStereotypeArray())
                     .filter(s -> s.contains("chart-"))
                     .map(s -> "                        " + s.split("-")[1] + ": true")
                     .collect(Collectors.joining(",\n"));
 
-            attributeCodes.add("            " + attribute.getName() + ": new class extends Attribute." + attribute.getTypeAsString() + " {\n" +
+            attributeCodes.add("            " + attribute.getName() + ": new class extends " + attributeClass.getName() + " {\n" +
                     "                constructor() {\n" +
                     "                    super();\n" +
                     "                    this.name = '" + attribute.getName() + "';\n" +

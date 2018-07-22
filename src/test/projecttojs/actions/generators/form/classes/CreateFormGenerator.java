@@ -22,12 +22,9 @@ public class CreateFormGenerator extends DefaultSingleGenerator implements Gener
 
         this.appendFullText("class CreateForm extends Form {\n" +
                 "    constructor(){\n" +
-                "        super();\n" +
-                "        this.name = '" + this.getDefinition().getName() + "CreateForm';\n" +
-                "        this.title = '" + label + " toevoegen';\n" +
-                "        this.fields = {\n" +
+                "        super('" + this.getDefinition().getName() + "CreateForm', 'Create " + label + "', {\n" +
                 fieldsCode + "\n" +
-                "        };\n" +
+                "        });\n" +
                 "        delete this.buttons.remove;\n" +
                 "    }\n" +
                 "}\n");
