@@ -42,7 +42,7 @@ public class FormGenerator extends DefaultSingleGenerator implements Generator {
                 updateFormCode + "\n" +
                 selectFormCode + "\n" +
                 "export {\n" +
-                "    CreateForm as Create,\n" +
+                "    CreateForm as CreateGenerator,\n" +
                 "    UpdateForm as Update,\n" +
                 "    SelectForm as Select\n" +
                 "}\n");

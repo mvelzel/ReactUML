@@ -3,6 +3,7 @@ package test.projecttojs.actions.generators.action;
 import test.projecttojs.actions.ClassDefinition;
 import test.projecttojs.actions.generators.DefaultSingleGenerator;
 import test.projecttojs.actions.generators.Generator;
+import test.projecttojs.actions.generators.action.operations.*;
 
 public class ActionGenerator extends DefaultSingleGenerator implements Generator {
     public ActionGenerator(ClassDefinition definition){
@@ -11,42 +12,54 @@ public class ActionGenerator extends DefaultSingleGenerator implements Generator
 
     @Override
     public void generateFullText() {
-        this.appendFullText("import { " + this.getDefinition().getName() + " } from '../domain-entity/" + this.getDefinition().getName() + "';\n" +
+        ClearItemGenerator clearItemGenerator = new ClearItemGenerator(this.getDefinition());
+        CreateGenerator createGenerator = new CreateGenerator(this.getDefinition());
+        DeleteGenerator deleteGenerator = new DeleteGenerator(this.getDefinition());
+        InitGenerator initGenerator = new InitGenerator(this.getDefinition());
+        ItemLoadedGenerator itemLoadedGenerator = new ItemLoadedGenerator(this.getDefinition());
+        LoadItemGenerator loadItemGenerator = new LoadItemGenerator(this.getDefinition());
+        UpdateGenerator updateGenerator = new UpdateGenerator(this.getDefinition());
+        OtherOperationsGenerator otherOperationsGenerator = new OtherOperationsGenerator(this.getDefinition());
+        ExtraExportsGenerator extraExportsGenerator = new ExtraExportsGenerator(this.getDefinition());
+
+        clearItemGenerator.generateFullText();
+        createGenerator.generateFullText();
+        deleteGenerator.generateFullText();
+        initGenerator.generateFullText();
+        itemLoadedGenerator.generateFullText();
+        loadItemGenerator.generateFullText();
+        updateGenerator.generateFullText();
+        otherOperationsGenerator.generateFullText();
+        extraExportsGenerator.generateFullText();
+
+        String clearItemCode = clearItemGenerator.getFullText();
+        String createCode = createGenerator.getFullText();
+        String deleteCode = deleteGenerator.getFullText();
+        String initCode = initGenerator.getFullText();
+        String itemLoadedCode = itemLoadedGenerator.getFullText();
+        String loadItemCode = loadItemGenerator.getFullText();
+        String updateCode = updateGenerator.getFullText();
+        String otherOperationsCode = otherOperationsGenerator.getFullText();
+        String extraExportsCode = extraExportsGenerator.getFullText();
+
+        this.appendFullText("import " + this.getDefinition().getName() + " from '../domain-entity/" + this.getDefinition().getName() + "';\n" +
                 "import store from '../store';\n" +
                 "\n" +
-                "function Init() {}\n" +
+                initCode +
                 "\n" +
-                "function LoadItem(id) {\n" +
-                "    var Entity = new " + this.getDefinition().getName() + ";\n" +
-                "    Entity.syncInstance(" + this.getDefinition().getName() + ", id, function(item) {\n" +
-                "        ItemLoaded(item);\n" +
-                "    });\n" +
-                "}\n" +
+                loadItemCode +
                 "\n" +
-                "function ItemLoaded(item) {\n" +
-                "    trigger(item);\n" +
-                "}\n" +
+                itemLoadedCode +
                 "\n" +
-                "function Create(values, callback) {\n" +
-                "    var Entity = new " + this.getDefinition().getName() + "();\n" +
-                "    var item = Entity._new(values, null, callback);\n" +
-                "    trigger(item);\n" +
-                "}\n" +
+                createCode +
                 "\n" +
-                "function ClearItem() {\n" +
-                "    trigger(null);\n" +
-                "}\n" +
+                clearItemCode +
                 "\n" +
-                "function Update(item, values, callback) {\n" +
-                "    item.update(values, null, callback);\n" +
-                "    trigger(item);\n" +
-                "}\n" +
+                updateCode +
                 "\n" +
-                "function Delete(item, callback) {\n" +
-                "    item.delete(null, callback);\n" +
-                "    ClearItem();\n" +
-                "}\n" +
+                deleteCode +
                 "\n" +
+                otherOperationsCode +
                 "function trigger(item) {\n" +
                 "    store.dispatch(function(i) {\n" +
                 "        return {\n" +
@@ -57,6 +70,7 @@ public class ActionGenerator extends DefaultSingleGenerator implements Generator
                 "}\n" +
                 "\n" +
                 "export {\n" +
+                extraExportsCode +
                 "    LoadItem,\n" +
                 "    ItemLoaded,\n" +
                 "    Create,\n" +

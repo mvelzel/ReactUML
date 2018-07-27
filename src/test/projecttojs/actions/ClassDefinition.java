@@ -15,7 +15,16 @@ public class ClassDefinition {
     private List<IAssociation> associations;
     private IRealization realizationClass;
     private IGeneralization generalizationClass;
+    private IClass originalClass;
     private IProject parentProject;
+
+    public IClass getOriginalClass() {
+        return originalClass;
+    }
+
+    public void setOriginalClass(IClass originalClass) {
+        this.originalClass = originalClass;
+    }
 
     /**
      * Constructs a <code>ClassDefinition</code> based on its id
@@ -40,6 +49,7 @@ public class ClassDefinition {
 
         this.name = namespace + "_" + modelClass.getName();
         this.parentProject = modelClass.getProject();
+        this.originalClass = modelClass;
         this.operations = new ArrayList<>();
         this.attributes = new ArrayList<>();
         this.associations = new ArrayList<>();

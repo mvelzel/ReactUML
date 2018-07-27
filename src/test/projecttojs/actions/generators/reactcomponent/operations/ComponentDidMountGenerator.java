@@ -22,7 +22,7 @@ public class ComponentDidMountGenerator extends DefaultSingleGenerator implement
         IOperation operation = Helpers.getFromElementList(this.getDefinition().getOperations(), IOperation::getName, s -> s.equals("componentDidMount"));
         List<IAttribute> connections = Helpers.filterElementList(this.getDefinition().getAttributes(),
                 c -> Arrays.asList(c.toStereotypeArray()),
-                ss -> ss.contains("connect") || ss.contains("connectRoute") || ss.contains("load"));
+                ss -> /*ss.contains("connect") || ss.contains("connectRoute") || */ss.contains("load"));
 
         String errorActionCode = Helpers.stringExistsInIterator(this.getDefinition().getStereotypes().iterator(), "errors") ? "        ErrorActions.connect(this);\n" : "";
         boolean errorImplement = false;
@@ -38,7 +38,7 @@ public class ComponentDidMountGenerator extends DefaultSingleGenerator implement
                 }
                 ClassDefinition type = new ClassDefinition(connection.getTypeAsModel().getId(), false);
                 ITaggedValue idTag = Helpers.getFromElementList(Arrays.asList(connection.getTaggedValues().toTaggedValueArray()), ITaggedValue::getName, n -> n.equals("id"));
-                this.appendFullText("        ActionList." + type.getName() + "." + type.getName() + "_Load(" + idTag.getValueAsString() + ");\n");
+                this.appendFullText("        ActionList." + type.getName() + ".LoadItem(" + idTag.getValueAsString() + ");\n");
             }
             this.appendFullText(errorActionCode);
             errorImplement = true;

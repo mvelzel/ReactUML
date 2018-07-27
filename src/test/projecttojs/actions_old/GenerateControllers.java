@@ -30,10 +30,10 @@ public class GenerateControllers extends Helpers {
 				hasClassifierCreateController = true;
 		}
 		if(!hasClassifierCreateController){
-			exportsCode.add("   Create: CreateController");
+			exportsCode.add("   CreateGenerator: CreateController");
 			code +=
 		        "var CreateController = function(contextObject) {\n" +
-		        "   var form = new Form.Create(contextObject).open();\n" +
+		        "   var form = new Form.CreateGenerator(contextObject).open();\n" +
 		        "   $.when(form).done(function(formData) {\n" +
 	            "       if (formData) {\n" +
 	            "           switch(formData.action) {\n" +
@@ -55,7 +55,7 @@ public class GenerateControllers extends Helpers {
 		            "                   }\n";
 			}
 			code +=
-		        "                   DomainAPI." + definition.getName() + "Create(formData.values, contextObject.user);\n" +
+		        "                   DomainAPI." + definition.getName() + "CreateGenerator(formData.values, contextObject.user);\n" +
 		        "                   break;\n" +
 		        "           }\n" +
 	            "       }\n" +

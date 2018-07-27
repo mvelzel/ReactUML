@@ -65,11 +65,11 @@ public class GenerateStore extends Helpers {
 		    "   that.connectAPI([\n" +
 		    "       [DomainAPI." + definition.getName() + "Connect, 'onConnect'],\n" +
 	        "       [DomainAPI." + definition.getName() + "Disconnect, 'onDisconnect'],\n" +
-	        "       [DomainAPI." + definition.getName() + "Create, 'onCreate'],\n" +
+	        "       [DomainAPI." + definition.getName() + "CreateGenerator, 'onCreate'],\n" +
 	        "       [DomainAPI." + definition.getName() + "Update, 'onUpdate'],\n" +
 	        "       [DomainAPI." + definition.getName() + "Delete, 'onDelete'],\n" +
 	        "       [DomainAPI." + definition.getName() + "Get, 'onGet'],\n" +
-	        "       [DomainAPI." + definition.getName() + "LoadItem, 'onLoadItem'],\n" +
+	        "       [DomainAPI." + definition.getName() + "LoadItemGenerator, 'onLoadItem'],\n" +
 	        "       [DomainAPI." + definition.getName() + "Refresh, 'onRefresh']";
 		
 		if(!operationsCode.isEmpty()){

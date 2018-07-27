@@ -32,7 +32,7 @@ public class ComponentWillReceivePropsGenerator extends DefaultSingleGenerator i
                 this.appendFullText("    componentWillReceiveProps() {\n");
                 for (IAttribute attribute : loadAttributes) {
                     this.appendFullText("        if(this.props." + attribute.getName() + ".id && this.props." + attribute.getName() + ".loadStatus === 'proxy') {\n" +
-                            "            DomainAPI." + new ClassDefinition(attribute.getTypeAsModel().getId(), false).getName() + "LoadItem(this.props." + attribute.getName() + ".id);\n" +
+                            "            DomainAPI." + new ClassDefinition(attribute.getTypeAsModel().getId(), false).getName() + "LoadItemGenerator(this.props." + attribute.getName() + ".id);\n" +
                             "        }\n");
                 }
                 this.appendFullText("    };\n");

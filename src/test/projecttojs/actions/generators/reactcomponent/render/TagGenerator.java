@@ -1,24 +1,28 @@
 package test.projecttojs.actions.generators.reactcomponent.render;
 
+import com.vp.plugin.model.IStereotype;
 import com.vp.plugin.model.ITaggedValue;
+import com.vp.plugin.model.ITaggedValueDefinition;
 import test.projecttojs.actions.ClassDefinition;
 import test.projecttojs.actions.generators.Generator;
 import test.projecttojs.actions.Helpers;
 import test.projecttojs.actions.generators.DefaultSingleGenerator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class TagGenerator extends DefaultSingleGenerator implements Generator {
-    public TagGenerator(ClassDefinition definition){
+    public TagGenerator(ClassDefinition definition) {
         super(definition);
     }
 
     @Override
     public void generateFullText() {
         List<ITaggedValue> filteredTags = Helpers.filterElementList(this.getDefinition().getTaggedValues(), ITaggedValue::getName, s -> !s.equals("classNames") && !s.equals("style"));
+        filteredTags = Helpers.filterElementList(filteredTags, ITaggedValue::getTagDefinitionStereotype, s -> s == null);
         String properties = filteredTags.size() > 0 ? " " + filteredTags.stream().map(t -> t.getName() + "={" + t.getValueAsString() + "}").collect(Collectors.joining(" ")) : "";
 
         String openTag;
@@ -28,27 +32,18 @@ public class TagGenerator extends DefaultSingleGenerator implements Generator {
             String style = getStyle();
             openTag = "<span className={\"" + Helpers.camelToDash(this.getDefinition().getName(false)) + " \" + " + classNames + "} style={self.props.style || " + style + "}" + properties + " >";
             closeTag = "</span>";
-            if (Helpers.stringExistsInIterator(this.getDefinition().getStereotypes().iterator(), "div")) {
-                openTag = "<div className={\"" + Helpers.camelToDash(this.getDefinition().getName(false)) + " \" + " + classNames + "} style={self.props.style || " + style + "}" + properties + " >";
-                closeTag = "</div>";
-            }
-            if (Helpers.stringExistsInIterator(this.getDefinition().getStereotypes().iterator(), "ul")) {
-                openTag = "<ul className={\"" + Helpers.camelToDash(this.getDefinition().getName(false)) + " \" + " + classNames + "} style={self.props.style || " + style + "}" + properties + " >";
-                closeTag = "</ul>";
-            }
-            if (Helpers.stringExistsInIterator(this.getDefinition().getStereotypes().iterator(), "li")) {
-                openTag = "<li className={\"" + Helpers.camelToDash(this.getDefinition().getName(false)) + " \" + " + classNames + "} style={self.props.style || " + style + "}" + properties + " >";
-                closeTag = "</li>";
-            }
             if (Helpers.stringExistsInIterator(this.getDefinition().getStereotypes().iterator(), "page")) {
                 openTag = "<div className={\"page " + Helpers.camelToDash(this.getDefinition().getName(false)) + " \" + " + classNames + "} style={self.props.style || " + style + "}" + properties + " >";
                 closeTag = "</div>";
             }
-            for (String stereotype : this.getDefinition().getStereotypes()) {
-                if (stereotype.startsWith("tag-")) {
-                    String htmlTag = stereotype.split("-")[1];
-                    openTag = "<" + htmlTag + " className={\"" + Helpers.camelToDash(this.getDefinition().getName(false)) + " \" + " + classNames + "} style={self.props.style || " + style + "}" + properties + " >";
-                    closeTag = "</" + htmlTag + ">";
+            for (IStereotype stereotype : this.getDefinition().getOriginalClass().toStereotypeModelArray()) {
+                if (stereotype.getTaggedValueDefinitions() != null) {
+                    ITaggedValueDefinition tagTag = Helpers.getFromElementList(Arrays.asList(stereotype.getTaggedValueDefinitions().toTaggedValueDefinitionArray()), ITaggedValueDefinition::getName, n -> n.equals("tag"));
+                    if (tagTag != null) {
+                        String htmlTag = tagTag.getDefaultValue();
+                        openTag = "<" + htmlTag + " className={\"" + Helpers.camelToDash(this.getDefinition().getName(false)) + " \" + " + classNames + "} style={self.props.style || " + style + "}" + properties + " >";
+                        closeTag = "</" + htmlTag + ">";
+                    }
                 }
             }
         } else {
@@ -85,7 +80,7 @@ public class TagGenerator extends DefaultSingleGenerator implements Generator {
         ITaggedValue styleTag = Helpers.getFromElementList(this.getDefinition().getTaggedValues(), ITaggedValue::getName, s -> s.equals("style"));
         if (styleTag != null) {
             //TODO extra ease
-            style =  "{" + styleTag.getValueAsString() + "}";
+            style = "{" + styleTag.getValueAsString() + "}";
         }
         return style;
     }

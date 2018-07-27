@@ -26,14 +26,14 @@ public class CreateOperationGenerator extends DefaultSingleGenerator implements 
                             "                    }").collect(Collectors.joining("\n"));
 
             this.appendFullText("var CreateController = function(contextObject) {\n" +
-                    "    var form = new Form.Create(contextObject).open();\n" +
+                    "    var form = new Form.CreateGenerator(contextObject).open();\n" +
                     "    $.when(form).done(function(formData) {\n" +
                     "        if (formData) {\n" +
                     "            switch(formData.action) {\n" +
                     "                case 'save':\n" +
                     "                    formData.values = formData.values || {};\n" +
                     formData +
-                    "                    \nDomainAPI." + this.getDefinition().getName() + "Create(formData.values, contextObject.user);\n" +
+                    "                    \nDomainAPI." + this.getDefinition().getName() + "CreateGenerator(formData.values, contextObject.user);\n" +
                     "                    break;\n" +
                     "            }\n" +
                     "        }\n" +

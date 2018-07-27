@@ -46,4 +46,9 @@ public class FormGenerator extends DefaultSingleGenerator implements Generator {
                 "    SelectForm as Select\n" +
                 "}\n");
     }
+
+    @Override
+    public String getFolder() {
+        return "form";
+    }
 }

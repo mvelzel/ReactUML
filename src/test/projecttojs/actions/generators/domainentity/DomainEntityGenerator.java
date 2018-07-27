@@ -42,7 +42,7 @@ public class DomainEntityGenerator extends DefaultSingleGenerator implements Gen
                 constructorCode + "\n" +
                 operationsCode +
                 "};\n\n" +
-                "export { " + this.getDefinition().getName() + " };");
+                "export default " + this.getDefinition().getName() + ";");
     }
 
     public String getFolder(){

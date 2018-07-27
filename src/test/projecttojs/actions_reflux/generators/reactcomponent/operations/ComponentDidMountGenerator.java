@@ -34,10 +34,10 @@ public class ComponentDidMountGenerator extends DefaultSingleGenerator implement
                 ClassDefinition type = new ClassDefinition(connection.getTypeAsModel().getId(), false);
                 this.appendFullText("        DomainAPI." + type.getName() + "Connect(this, '" + connection.getName() + "');\n");
                 if(Helpers.stringExistsInIterator(connection.stereotypeIterator(), "connectRoute")){
-                    this.appendFullText("        DomainAPI." + type.getName() + "LoadItem(this.props.params.id);\n");
+                    this.appendFullText("        DomainAPI." + type.getName() + "LoadItemGenerator(this.props.params.id);\n");
                 }
                 if(Helpers.stringExistsInIterator(connection.stereotypeIterator(), "load")){
-                    this.appendFullText("        if(this.props." + connection.getName() + ".id && this.props." + connection.getName() + ".loadStatus === \"proxy\") { DomainAPI." + type.getName() + "LoadItem(this.props." + connection.getName() + ".id); }\n");
+                    this.appendFullText("        if(this.props." + connection.getName() + ".id && this.props." + connection.getName() + ".loadStatus === \"proxy\") { DomainAPI." + type.getName() + "LoadItemGenerator(this.props." + connection.getName() + ".id); }\n");
                 }
             }
             this.appendFullText(errorActionCode);

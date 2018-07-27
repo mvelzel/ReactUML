@@ -22,7 +22,8 @@ public class CombineReducerGenerator extends DefaultMultiGenerator implements Mu
                 "//\n" +
                 "// WARNING: Do not change this code; it will be overwritten with the next generation run!\n" +
                 "//          Change the code only in Visual Paradigm.\n//\n" +
-                "import { combineReducers } from 'redux';\n");
+                "import { combineReducers } from 'redux';\n" +
+                "import Form from '../../../js/view/form/formReducer';\n");
     }
 
     @Override

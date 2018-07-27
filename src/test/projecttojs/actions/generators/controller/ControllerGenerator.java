@@ -1,12 +1,12 @@
-package test.projecttojs.actions_reflux.generators.controller;
+package test.projecttojs.actions.generators.controller;
 
 import com.vp.plugin.model.IOperation;
-import test.projecttojs.actions_reflux.ClassDefinition;
-import test.projecttojs.actions_reflux.generators.DefaultSingleGenerator;
-import test.projecttojs.actions_reflux.generators.Generator;
-import test.projecttojs.actions_reflux.generators.controller.operations.CreateOperationGenerator;
-import test.projecttojs.actions_reflux.generators.controller.operations.OtherOperationsGenerator;
-import test.projecttojs.actions_reflux.generators.controller.operations.UpdateOperationGenerator;
+import test.projecttojs.actions.ClassDefinition;
+import test.projecttojs.actions.generators.DefaultSingleGenerator;
+import test.projecttojs.actions.generators.Generator;
+import test.projecttojs.actions.generators.controller.operations.CreateOperationGenerator;
+import test.projecttojs.actions.generators.controller.operations.OtherOperationsGenerator;
+import test.projecttojs.actions.generators.controller.operations.UpdateOperationGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,11 +35,11 @@ public class ControllerGenerator extends DefaultSingleGenerator implements Gener
 
         for(IOperation operation : this.getDefinition().getOperations()){
             if (operation.getScope().equals("controller") && operation.getName().contains("Controller")) {
-                exports.add("    " + operation.getName().replace("Controller", "") + ": " + operation.getName());
+                exports.add("    " + operation.getName() + " as " + operation.getName().replace("Controller", ""));
             }
         }
 
-        String exportsCode = exports.size() > 0 ? ",\n" + exports.stream().collect(Collectors.joining("\n")) + "\n" : "";
+        String exportsCode = exports.size() > 0 ? ",\n" + exports.stream().collect(Collectors.joining("\n")) : "";
 
         this.appendFullText("// " + this.getDefinition().getName() + " Controllers\n" +
                 "// \n" +
@@ -48,17 +48,18 @@ public class ControllerGenerator extends DefaultSingleGenerator implements Gener
                 "// WARNING: Do not change this code; it will be overwritten by the next generation run!\n" +
                 "//          Change the code only in the Visual Paradigm Project.\n\n" +
                 "import * as Form from '../form/" + this.getDefinition().getName() + "';\n" +
+                "import * as ActionList from '../action';\n" +
+                "import * as $ from 'jquery-deferred';\n" +
                 "import {" + this.getDefinition().getName() + "} from '../domain-entity/" + this.getDefinition().getName() + "';\n" +
-                "var DomainAPI = require('../domain-entity/DomainAPI');\n" +
                 "\n" +
                 createOperation +
                 updateOperation +
                 otherOperations +
-                "module.exports = {\n" +
-                "    CreateGenerator: CreateController,\n" +
-                "    Update: UpdateController" +
+                "export {\n" +
+                "    CreateController as Create,\n" +
+                "    UpdateController as Update" +
                 exportsCode +
-                "}\n");
+                "\n}\n");
     }
 
     @Override

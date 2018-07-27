@@ -11,7 +11,7 @@ public class CombineReducerEndGenerator extends DefaultMultiGenerator implements
 
     @Override
     public void generateEndText() {
-
+        this.appendFullText("    Form: Form,\n");
     }
 
     @Override

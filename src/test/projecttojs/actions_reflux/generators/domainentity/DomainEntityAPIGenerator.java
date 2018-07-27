@@ -14,11 +14,11 @@ public class DomainEntityAPIGenerator extends DefaultMultiGenerator implements M
                 "// \n" +
                 "    '" + this.getDefinition().getName() + "Connect': { asyncResult: true },\n" +
                 "    '" + this.getDefinition().getName() + "Disconnect': { asyncResult: true },\n" +
-                "    '" + this.getDefinition().getName() + "Create': { asyncResult: true },\n" +
+                "    '" + this.getDefinition().getName() + "CreateGenerator': { asyncResult: true },\n" +
                 "    '" + this.getDefinition().getName() + "Update': { asyncResult: true },\n" +
                 "    '" + this.getDefinition().getName() + "Delete': { asyncResult: true },\n" +
                 "    '" + this.getDefinition().getName() + "Get': { asyncResult: false },\n" +
-                "    '" + this.getDefinition().getName() + "LoadItem': { asyncResult: true },\n" +
+                "    '" + this.getDefinition().getName() + "LoadItemGenerator': { asyncResult: true },\n" +
                 "    '" + this.getDefinition().getName() + "Refresh': { asyncResult: true },\n");
 
         Helpers.filterElementList(this.getDefinition().getOperations(), IOperation::getScope, o -> o.equals("classifier"))

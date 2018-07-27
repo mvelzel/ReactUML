@@ -1,7 +1,6 @@
 package test.projecttojs.actions.generators.reactcomponent;
 
-import com.vp.plugin.model.IAssociation;
-import com.vp.plugin.model.IAttribute;
+import com.vp.plugin.model.*;
 import test.projecttojs.actions.ClassDefinition;
 import test.projecttojs.actions.generators.Generator;
 import test.projecttojs.actions.Helpers;
@@ -39,7 +38,7 @@ public class ImportsGenerator extends DefaultSingleGenerator implements Generato
 
         List<IAttribute> connections = Helpers.filterElementList(this.getDefinition().getAttributes(),
                 c -> Arrays.asList(c.toStereotypeArray()),
-                ss -> ss.contains("connect") || ss.contains("connectRoute") || ss.contains("load"));
+                ss -> ss.contains("connect") || ss.contains("connectRoute") || ss.contains("load") || ss.contains("formconnect"));
 
         if (connections.size() > 0) {
             this.appendFullText("import { connect } from 'react-redux';\n");
@@ -62,5 +61,25 @@ public class ImportsGenerator extends DefaultSingleGenerator implements Generato
                 }
             }
         }
+
+        List<String> entityIterated = new ArrayList<>();
+        for (IOperation operation : this.getDefinition().getOperations()) {
+            if (Helpers.stringExistsInIterator(operation.stereotypeIterator(), "controller")) {
+                String entityName = this.getDefinition().getName().split("_")[0] + "_" + operation.getName().split("_")[0];
+                if (!entityIterated.contains(entityName)) {
+                    this.appendFullText("import * as " + entityName + "Controller from '../controller/" + entityName + "';\n");
+                    entityIterated.add(entityName);
+                }
+            }
+        }
+
+        for (IStereotype stereotype : this.getDefinition().getOriginalClass().toStereotypeModelArray()) {
+            if (stereotype.getTaggedValueDefinitions() != null) {
+                ITaggedValueDefinition importTag = Helpers.getFromElementList(Arrays.asList(stereotype.getTaggedValueDefinitions().toTaggedValueDefinitionArray()), ITaggedValueDefinition::getName, n -> n.equals("import"));
+                if (importTag != null) {
+                    this.appendFullText(importTag.getDefaultValue());
+                }
+            }
+       }
     }
 }

@@ -635,10 +635,10 @@ public class GenerateReactComponents extends Helpers {
                         "       DomainAPI." + GetFullClassDefinition(connection.getTypeAsModel().getId(), project, viewManager, parentFrame, false, namespace).name + suffix + "Connect(this, '" + connection.getName() + "');\n";
                 if (stringExistsInIterator(connection.stereotypeIterator(), "connectRoute"))
                     allOperationsCode +=
-                            "       DomainAPI." + GetFullClassDefinition(connection.getTypeAsModel().getId(), project, viewManager, parentFrame, false, namespace).name + suffix + "LoadItem(this.props.params.id);\n";
+                            "       DomainAPI." + GetFullClassDefinition(connection.getTypeAsModel().getId(), project, viewManager, parentFrame, false, namespace).name + suffix + "LoadItemGenerator(this.props.params.id);\n";
                 if (stringExistsInIterator(connection.stereotypeIterator(), "load"))
                     allOperationsCode +=
-                            "       if (this.props." + connection.getName() + ".id && this.props." + connection.getName() + ".loadStatus === 'proxy') { DomainAPI." + GetFullClassDefinition(connection.getTypeAsModel().getId(), project, viewManager, parentFrame, false, namespace).name + suffix + "LoadItem(this.props." + connection.getName() + ".id); }\n";
+                            "       if (this.props." + connection.getName() + ".id && this.props." + connection.getName() + ".loadStatus === 'proxy') { DomainAPI." + GetFullClassDefinition(connection.getTypeAsModel().getId(), project, viewManager, parentFrame, false, namespace).name + suffix + "LoadItemGenerator(this.props." + connection.getName() + ".id); }\n";
             }
             if (stringExistsInIterator(definition.stereotypes.iterator(), "errors"))
                 allOperationsCode +=
@@ -704,7 +704,7 @@ public class GenerateReactComponents extends Helpers {
                             suffix = capitalizeFirstLetter(loadAttribute.getName());
                         allOperationsCode +=
                                 "       if (this.props." + loadAttribute.getName() + ".id && this.props." + loadAttribute.getName() + ".loadStatus === 'proxy') {\n" +
-                                        "           DomainAPI." + GetFullClassDefinition(loadAttribute.getTypeAsModel().getId(), project, viewManager, parentFrame, false, namespace).name + suffix + "LoadItem(this.props." + loadAttribute.getName() + ".id);\n" +
+                                        "           DomainAPI." + GetFullClassDefinition(loadAttribute.getTypeAsModel().getId(), project, viewManager, parentFrame, false, namespace).name + suffix + "LoadItemGenerator(this.props." + loadAttribute.getName() + ".id);\n" +
                                         "       }\n";
                     }
                     allOperationsCode +=

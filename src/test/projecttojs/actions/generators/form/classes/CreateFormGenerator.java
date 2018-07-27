@@ -14,7 +14,7 @@ public class CreateFormGenerator extends DefaultSingleGenerator implements Gener
     @Override
     public void generateFullText() {
         ITaggedValue labelTag = Helpers.getFromElementList(this.getDefinition().getTaggedValues(), ITaggedValue::getName, s -> s.equals("label"));
-        String label = labelTag != null ? labelTag.getValueAsString() : this.getDefinition().getName();
+        String label = labelTag != null ? labelTag.getValueAsString() : this.getDefinition().getName().split("_")[1];
 
         FieldsCodeGenerator fieldsCodeGenerator = new FieldsCodeGenerator(this.getDefinition());
         fieldsCodeGenerator.generateFullText();

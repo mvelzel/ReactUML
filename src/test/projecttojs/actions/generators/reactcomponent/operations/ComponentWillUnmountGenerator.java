@@ -29,7 +29,7 @@ public class ComponentWillUnmountGenerator extends DefaultSingleGenerator implem
         if(operation != null){
             this.appendFullText("    componentWillUnmount() {\n");
             for(IAttribute connection : connections){
-                this.appendFullText("        DomainAPI." + new ClassDefinition(connection.getTypeAsModel().getId(), false).getName() + "Disconnect(this);\n");
+                this.appendFullText("        ActionList." + new ClassDefinition(connection.getTypeAsModel().getId(), false).getName() + ".Disconnect(this);\n");
             }
             this.appendFullText(errorActionCode);
             errorImplement = true;

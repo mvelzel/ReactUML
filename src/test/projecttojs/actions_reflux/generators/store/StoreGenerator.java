@@ -40,11 +40,11 @@ public class StoreGenerator extends DefaultSingleGenerator implements Generator 
 
         String APICode = "        [DomainAPI." + this.getDefinition().getName() + "Connect, 'onConnect'],\n" +
                 "        [DomainAPI." + this.getDefinition().getName() + "Disconnect, 'onDisconnect'],\n" +
-                "        [DomainAPI." + this.getDefinition().getName() + "Create, 'onCreate'],\n" +
+                "        [DomainAPI." + this.getDefinition().getName() + "CreateGenerator, 'onCreate'],\n" +
                 "        [DomainAPI." + this.getDefinition().getName() + "Update, 'onUpdate'],\n" +
                 "        [DomainAPI." + this.getDefinition().getName() + "Delete, 'onDelete'],\n" +
                 "        [DomainAPI." + this.getDefinition().getName() + "Get, 'onGet'],\n" +
-                "        [DomainAPI." + this.getDefinition().getName() + "LoadItem, 'onLoadItem'],\n" +
+                "        [DomainAPI." + this.getDefinition().getName() + "LoadItemGenerator, 'onLoadItem'],\n" +
                 "        [DomainAPI." + this.getDefinition().getName() + "Refresh, 'onRefresh']";
         if (operationsCode != "") {
             APICode += ",\n";

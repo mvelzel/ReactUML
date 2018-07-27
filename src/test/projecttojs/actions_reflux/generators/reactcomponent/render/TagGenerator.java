@@ -1,5 +1,6 @@
 package test.projecttojs.actions_reflux.generators.reactcomponent.render;
 
+import com.vp.plugin.model.IStereotype;
 import com.vp.plugin.model.ITaggedValue;
 import test.projecttojs.actions_reflux.ClassDefinition;
 import test.projecttojs.actions_reflux.Helpers;
@@ -18,6 +19,7 @@ public class TagGenerator extends DefaultSingleGenerator implements Generator {
     @Override
     public void generateFullText() {
         List<ITaggedValue> filteredTags = Helpers.filterElementList(this.getDefinition().getTaggedValues(), ITaggedValue::getName, s -> !s.equals("classNames") && !s.equals("style"));
+
         String properties = filteredTags.size() > 0 ? " " + filteredTags.stream().map(t -> t.getName() + "={" + t.getValueAsString() + "}").collect(Collectors.joining(" ")) : "";
 
         String openTag;

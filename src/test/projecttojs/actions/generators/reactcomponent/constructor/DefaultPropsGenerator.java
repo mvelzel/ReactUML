@@ -24,30 +24,9 @@ public class DefaultPropsGenerator extends DefaultSingleGenerator implements Gen
                 propAttributes.add(attribute);
         }
         if (this.getDefinition().getAttributes().size() > 0) {
-            ITaggedValue labelTag = null;
-            if (this.getDefinition().getTaggedValues().size() > 0) {
-                for (int i = 0; i < this.getDefinition().getTaggedValues().size(); i++) {
-                    ITaggedValue tag = this.getDefinition().getTaggedValues().get(i);
-                    if (tag.getName().equals("label")) {
-                        labelTag = tag;
-                        break;
-                    }
-                }
-            }
-
-            String label = "";
-            try {
-                if (labelTag != null) {
-                    if (labelTag.getValueAsString() != null) {
-                        label = labelTag.getValueAsString();
-                        this.appendFullText("        label: " + label);
-                    }
-                }
-            } catch (Exception e) {
-            }
             boolean firstIter = true;
             for (IAttribute propAttribute : propAttributes) {
-                if (!firstIter || !label.isEmpty())
+                if (!firstIter)
                     this.appendFullText(",\n");
                 String defaultValue;
                 if (propAttribute.getInitialValue() != null && !propAttribute.getInitialValue().equals("$attribute.getInitialValue().getName()"))

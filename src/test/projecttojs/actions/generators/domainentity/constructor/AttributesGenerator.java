@@ -34,45 +34,7 @@ public class AttributesGenerator extends DefaultSingleGenerator implements Gener
 
             ClassDefinition attributeClass = new ClassDefinition(attribute.getTypeAsModel().getId(), false);
 
-            String chartCode = Arrays.stream(attribute.toStereotypeArray())
-                    .filter(s -> s.contains("chart-"))
-                    .map(s -> "                        " + s.split("-")[1] + ": true")
-                    .collect(Collectors.joining(",\n"));
-
-            attributeCodes.add("            " + attribute.getName() + ": new class extends " + attributeClass.getName() + " {\n" +
-                    "                constructor() {\n" +
-                    "                    super();\n" +
-                    "                    this.name = '" + attribute.getName() + "';\n" +
-                    "                    this.label = '" + label + "';\n" +
-                    "                    this.description = '" + attribute.getDescription() + "';\n" +
-                    "                    this.defaultValue = " + defaultValue + ";\n" +
-                    "                    this.options = " + options + ";\n" +
-                    "                    this.chartParameters = {\n" +
-                    chartCode +
-                    "\n                    };\n" +
-                    "                    this.visibility = '" + Helpers.capitalizeFirstLetter(attribute.getVisibility()) + "';\n" +
-                    "                }\n" +
-                    "            }()");
-        }
-        if (Helpers.stringExistsInIterator(this.getDefinition().getStereotypes().iterator(), "timestamp")){
-            attributeCodes.add("            timestampCreate: new class extends Attribute.DateTimeAttribute {\n" +
-					"                constructor(){\n" +
-			        "                    super();\n" +
-			        "                    this.name = 'timestampCreate';\n" +
-			        "                    this.label = 'Tijdstip van ontstaan';\n" +
-			        "                    this.defaultValue = '';\n" +
-			        "                    this.visibility = 'Private';\n" +
-			        "                }\n" +
-			        "            }()");
-            attributeCodes.add("            timestampLastUpdate: new class extends Attribute.DateTimeAttribute {\n" +
-					"                constructor(){\n" +
-			        "                    super();\n" +
-			        "                    this.name = 'timestampLastUpdate';\n" +
-			        "                    this.label = 'Tijdstip van laatste wijziging';\n" +
-			        "                    this.defaultValue = '';\n" +
-			        "                    this.visibility = 'Private';\n" +
-			        "                }\n" +
-			        "            }()");
+            attributeCodes.add("            " + attribute.getName() + ": new " + attributeClass.getName() + "('" + attribute.getName() + "', '" + label + "', '" + attribute.getDescription() + "', " + defaultValue + ", false, '" + Helpers.capitalizeFirstLetter(attribute.getVisibility()) + "', '', " + options + ")");
         }
         this.appendFullText(attributeCodes.stream().collect(Collectors.joining(",\n")) + "\n");
     }

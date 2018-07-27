@@ -1,4 +1,4 @@
-package test.projecttojs.actions.generators.form;
+package test.projecttojs.actions.generators.attribute;
 
 import test.projecttojs.actions.ClassDefinition;
 import test.projecttojs.actions.generators.DefaultSingleGenerator;
@@ -11,8 +11,6 @@ public class ImportsGenerator extends DefaultSingleGenerator implements Generato
 
     @Override
     public void generateFullText() {
-        this.appendFullText("import Form from '../../../js/view/form/form';\n" +
-                "import FormField from '../../../js/view/form/formField';\n" +
-                "import " + this.getDefinition().getName() + " from '../domain-entity/" + this.getDefinition().getName() + "';\n");
+        this.appendFullText("import Attribute from '../../../js/model/attribute';\n");
     }
 }
