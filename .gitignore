@@ -4,3 +4,7 @@
 /.idea/
 /classes/
 /.settings/
+/src/test/projecttojs/actions_old/
+/src/test.projecttojs/actions_old/
+/src/test/projecttojs/actions_reflux/
+/src/test.projecttojs/actions_reflux/
