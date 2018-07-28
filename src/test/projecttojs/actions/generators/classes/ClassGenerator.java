@@ -5,6 +5,7 @@ import test.projecttojs.actions.generators.DefaultSingleGenerator;
 import test.projecttojs.actions.generators.Generator;
 import test.projecttojs.actions.generators.classes.constructor.ConstructorGenerator;
 import test.projecttojs.actions.generators.classes.operations.OperationsGenerator;
+import test.projecttojs.actions.generators.classes.operations.OtherOperationsGenerator;
 
 public class ClassGenerator extends DefaultSingleGenerator implements Generator {
     public ClassGenerator(ClassDefinition definition) {
@@ -25,6 +26,14 @@ public class ClassGenerator extends DefaultSingleGenerator implements Generator 
         operationsGenerator.generateFullText();
         String operationsCode = operationsGenerator.getFullText();
 
+        ExportsGenerator exportsGenerator = new ExportsGenerator(this.getDefinition());
+        exportsGenerator.generateFullText();
+        String exportsCode = exportsGenerator.getFullText();
+
+        OtherOperationsGenerator otherOperationsGenerator = new OtherOperationsGenerator(this.getDefinition());
+        otherOperationsGenerator.generateFullText();
+        String otherOperationsCode = otherOperationsGenerator.getFullText();
+
         String generalization = this.getDefinition().getGeneralizationClass() != null ? "extends " + this.getDefinition().getGeneralizationClass().getName() + " " : "";
 
         this.appendFullText("// " + this.getDefinition().getName() + " Class\n" +
@@ -38,8 +47,9 @@ public class ClassGenerator extends DefaultSingleGenerator implements Generator 
                 "class " + this.getDefinition().getName() + " " + generalization + "{\n" +
                 constructorCode + "\n" +
                 operationsCode +
-                "}\n\n" +
-                "export default " + this.getDefinition().getName() + ";");
+                "}\n" +
+                otherOperationsCode +
+                exportsCode);
     }
 
     @Override

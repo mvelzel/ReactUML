@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ImportsGenerator extends DefaultSingleGenerator implements Generator {
-    public ImportsGenerator(ClassDefinition definition){
+    public ImportsGenerator(ClassDefinition definition) {
         super(definition);
     }
 
@@ -51,7 +51,7 @@ public class ImportsGenerator extends DefaultSingleGenerator implements Generato
             ClassDefinition def = new ClassDefinition(Helpers.getAssociationEnd(association, this.getDefinition(), true).getModelElement().getId(), false);
             if (Helpers.getAssociationEnd(association, this.getDefinition(), false).getAggregationKind().equals("Composited") && !Helpers.stringExistsInIterator(iterated.iterator(), def.getName())) {
                 iterated.add(def.getName());
-                if(Helpers.stringExistsInIterator(association.stereotypeIterator(), "Route")) {
+                if (Helpers.stringExistsInIterator(association.stereotypeIterator(), "Route")) {
                     if (!routeFound) {
                         this.appendFullText("import { Switch } from 'react-router-dom';\n");
                         routeFound = true;
@@ -80,6 +80,6 @@ public class ImportsGenerator extends DefaultSingleGenerator implements Generato
                     this.appendFullText(importTag.getDefaultValue());
                 }
             }
-       }
+        }
     }
 }

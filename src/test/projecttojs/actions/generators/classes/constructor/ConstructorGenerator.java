@@ -16,11 +16,17 @@ public class ConstructorGenerator extends DefaultSingleGenerator implements Gene
     @Override
     public void generateFullText() {
         String attributesCode = "";
+        String parameterCode = "";
+        boolean firstIter = true;
         for (IAttribute attribute : this.getDefinition().getAttributes()) {
-            attributesCode += "        this." + attribute.getName() + " = " + attribute.getInitialValue() + ";\n";
+            if (!firstIter)
+                parameterCode += ", ";
+            parameterCode += attribute.getName() + " = " + attribute.getInitialValue();
+            attributesCode += "        this." + attribute.getName() + " = " + attribute.getName() + ";\n";
+            firstIter = false;
         }
 
-        this.appendFullText("    constructor() {\n" +
+        this.appendFullText("    constructor(" + parameterCode + ") {\n" +
                 "        super();\n" +
                 attributesCode +
                 "    };");

@@ -1,8 +1,13 @@
 package test.projecttojs.actions.generators.classes;
 
+import com.vp.plugin.model.IStereotype;
+import com.vp.plugin.model.ITaggedValueDefinition;
 import test.projecttojs.actions.ClassDefinition;
+import test.projecttojs.actions.Helpers;
 import test.projecttojs.actions.generators.DefaultSingleGenerator;
 import test.projecttojs.actions.generators.Generator;
+
+import java.util.Arrays;
 
 public class ImportsGenerator extends DefaultSingleGenerator implements Generator {
     public ImportsGenerator(ClassDefinition definition){
@@ -11,8 +16,13 @@ public class ImportsGenerator extends DefaultSingleGenerator implements Generato
 
     @Override
     public void generateFullText() {
-        if (this.getDefinition().getStereotypes().contains("FormField")) {
-            this.appendFullText("import FormField from '../../../js/1-presentation/services/meta/FormField';\n");
-        }
+        for (IStereotype stereotype : this.getDefinition().getOriginalClass().toStereotypeModelArray()) {
+            if (stereotype.getTaggedValueDefinitions() != null) {
+                ITaggedValueDefinition importTag = Helpers.getFromElementList(Arrays.asList(stereotype.getTaggedValueDefinitions().toTaggedValueDefinitionArray()), ITaggedValueDefinition::getName, n -> n.equals("import"));
+                if (importTag != null) {
+                    this.appendFullText(importTag.getDefaultValue());
+                }
+            }
+       }
     }
 }

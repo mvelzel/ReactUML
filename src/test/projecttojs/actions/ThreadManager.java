@@ -13,22 +13,24 @@ public class ThreadManager implements Observer {
         this.threadMax = threadMax;
     }
 
-    public void addThread(Runnable r) {
+    public synchronized void addThread(Runnable r) {
         if (r == null) {
             throw new IllegalArgumentException("Runnable r is null");
         }
-        NotifyingThread t = new NotifyingThread(r);
-        if (threads.size() >= threadMax) {
-            queued.add(r);
-        } else {
-            t.addObserver(this);
-            threads.add(t);
-            t.start();
+        if (!this.joining) {
+            NotifyingThread t = new NotifyingThread(r);
+            if (threads.size() >= threadMax) {
+                queued.add(r);
+            } else {
+                t.addObserver(this);
+                threads.add(t);
+                t.start();
+            }
         }
     }
 
     public synchronized void moveQueue() {
-        if (queued.size() > 0) {
+        if (queued.size() > 0 && !this.joining) {
             if (queued.get(0) != null) {
                 this.addThread(queued.get(0));
             }
@@ -38,6 +40,7 @@ public class ThreadManager implements Observer {
 
     public void join() {
         this.joining = true;
+        /*
         while (threads.size() > 0) {
             NotifyingThread t = threads.get(0);
             threads.remove(t);
@@ -50,6 +53,22 @@ public class ThreadManager implements Observer {
             }
             this.moveQueue();
         }
+        */
+        for (NotifyingThread thread : threads) {
+            if (thread.isAlive()) {
+                try {
+                    thread.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        for (int i = 0; i < queued.size(); i++) {
+            Runnable t = this.queued.get(i);
+            NotifyingThread th = new NotifyingThread(t);
+            th.run();
+        }
+        Helpers.log("" + queued.size());
         this.joining = false;
     }
 
